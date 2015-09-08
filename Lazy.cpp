@@ -65,12 +65,14 @@ public:
     std::string RewriteFilename(const std::string &filename, int &fd) override
     {
         fd = -1;
+#if __clang_major__ == 3 && __clang_minor__ <= 6
         return InPlace ? filename : filename + "_fixed";
+#else
+        return filename + "_fixed";
+#endif
     }
 
-#if __clang_major__ == 3 && __clang_minor__ <= 6
     bool InPlace;
-#endif
 };
 
 static void manuallyPopulateParentMap(ParentMap *map, Stmt *s)
